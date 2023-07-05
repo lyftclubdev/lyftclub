@@ -91,40 +91,37 @@ router.delete("/delete", (req, res) => {
         res.send(body.data);
     });
 });*/
-
-router.get('/verify/:reference', (req, res) => {
+router.get('/verify/:reference', function(req, res) {
     const reference = req.params.reference;
-  
+
+    const https = require('https');
     const options = {
-      hostname: 'api.paystack.co',
-      port: 443,
-      path: `/transaction/verify/${reference}`,
-      method: 'GET',
-      headers: {
-        Authorization: 'Bearer ' + process.env.PAYSTACK_SECRET_KEY,
-        'Content-Type': 'application/json'
-      }
-    };
-  
-    const request = https.request(options, apiResponse => {
-      let data = '';
-  
-      apiResponse.on('data', chunk => {
-        data += chunk;
-      });
-  
-      apiResponse.on('end', () => {
-        const response = JSON.parse(data);
-        res.send(response);
-      });
-    });
-  
-    request.on('error', error => {
-      console.error(error);
-      res.status(500).send('An error occurred');
-    });
-  
-    request.end();
+        hostname: 'api.paystack.co',
+        port: 443,
+        path: `/transaction/verify/${reference}`,
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + process.env.PAYSTACK_SECRET_KEY
+        }
+      };
+
+        const httpsReq = https.request(options, response => {
+        let data = ''
+        
+        response.on('data', (chunk) => {
+            data += chunk
+        });
+        
+        response.on('end', () => {
+            console.log(JSON.parse(data))
+            res.send(JSON.parse(data))
+        })
+    }).on('error', error => {
+        console.error(error)
+        res.send(400)
+    })
+    
+    httpsReq.end()
   });
 
 router.post('/recharge', function(req, res) {
