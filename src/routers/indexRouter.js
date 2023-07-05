@@ -101,7 +101,7 @@ router.get('/verify/:reference', function(req, res) {
         path: `/transaction/verify/${reference}`,
         method: 'GET',
         headers: {
-          Authorization: 'Bearer ' + process.env.PAYSTACK_SECRET_KEY
+          Authorization: 'Bearer ' + 'sk_test_54e3d98a6feed158dea288f9319be51d01e24537'
         }
       };
 
@@ -144,7 +144,7 @@ router.post('/recharge', function(req, res) {
           path: '/transaction/charge_authorization',
           method: 'POST',
           headers: {
-            Authorization: 'Bearer ' + process.env.PAYSTACK_SECRET_KEY,
+            Authorization: 'Bearer ' + 'sk_test_54e3d98a6feed158dea288f9319be51d01e24537',
             'Content-Type': 'application/json'
           }
         }
