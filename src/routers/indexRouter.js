@@ -126,10 +126,6 @@ router.get('/verify/:reference', (req, res) => {
   
     request.end();
   });
-  
-  app.listen(3000, () => {
-    console.log('Server is listening on port 3000');
-  });
 
 router.post('/recharge', function(req, res) {
     var authCode = req.body.authCode;
