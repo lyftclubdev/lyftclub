@@ -75,7 +75,7 @@ router.delete("/delete", (req, res) => {
     res.json(users)
 }); 
 
-router.get('/verify/:reference', function(req, res) {
+/*router.get('/verify/:reference', function(req, res) {
     var reference = req.params.reference;
 
     paystack.transaction.verify(reference,
@@ -90,7 +90,46 @@ router.get('/verify/:reference', function(req, res) {
         }
         res.send(body.data);
     });
-});
+});*/
+
+router.get('/verify/:reference', (req, res) => {
+    const reference = req.params.reference;
+  
+    const options = {
+      hostname: 'api.paystack.co',
+      port: 443,
+      path: `/transaction/verify/${reference}`,
+      method: 'GET',
+      headers: {
+        Authorization: 'Bearer ' + process.env.PAYSTACK_SECRET_KEY,
+        'Content-Type': 'application/json'
+      }
+    };
+  
+    const request = https.request(options, apiResponse => {
+      let data = '';
+  
+      apiResponse.on('data', chunk => {
+        data += chunk;
+      });
+  
+      apiResponse.on('end', () => {
+        const response = JSON.parse(data);
+        res.send(response);
+      });
+    });
+  
+    request.on('error', error => {
+      console.error(error);
+      res.status(500).send('An error occurred');
+    });
+  
+    request.end();
+  });
+  
+  app.listen(3000, () => {
+    console.log('Server is listening on port 3000');
+  });
 
 router.post('/recharge', function(req, res) {
     var authCode = req.body.authCode;
